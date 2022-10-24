@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
   @override
+  
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: Drawer(),
@@ -40,32 +42,35 @@ class Home extends StatelessWidget {
                           SizedBox(
                             width: 10,
                           ),
-                          TextButton(
-                          child: Text(
-                            "Localização",
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
+                          DropdownButton(
+                            value: "Localização",
+                            items: <DropdownMenuItem<String>> [
+                                      DropdownMenuItem(child: Text("Localização"),value: "Localização"),
+                                      DropdownMenuItem(child: Text("Natal"),value: "Natal"),
+                                      DropdownMenuItem(child: Text("Parnamirim"),value: "Parnamirim"),
+                                      DropdownMenuItem(child: Text("Mossoró"),value: "Mossoró"),
+                                    ],
+                             onChanged: (String? lugar) {
+                              print("lugar");
+                            }
                           ),
-                          style: TextButton.styleFrom(
-                            side: BorderSide(width: 1.0),
+                       
+                        DropdownButton(
+                            value: "Gênero",
+                            items: <DropdownMenuItem<String>> [
+                                      DropdownMenuItem(child: Text("Gênero"),value: "Gênero"),
+                                      DropdownMenuItem(child: Text("Romance"),value: "Romance"),
+                                      DropdownMenuItem(child: Text("Terror"),value: "Terror"),
+                                      DropdownMenuItem(child: Text("Auto-Ajuda"),value: "Auto-Ajuda"),
+                                      DropdownMenuItem(child: Text("Ficção-Científica"),value: "Ficcao-c"),
+                                      DropdownMenuItem(child: Text("Drama"),value: "Drama"),
+                                      DropdownMenuItem(child: Text("Fantasia"),value: "Fantasia"),
+                                      DropdownMenuItem(child: Text("Literatura Brasileira"),value: "Literatura Brasileira"),
+                                    ],
+                             onChanged: (String? lugar) {
+                              print("lugar");
+                            }
                           ),
-                          onPressed: () {print('localização');}, 
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        TextButton(
-                          child: Text("Gênero",
-                          style: TextStyle(
-                            color: Colors.black,
-                          )
-                        ),
-                        style: TextButton.styleFrom(
-                            side: BorderSide(width: 1.0),
-                          ),
-                        onPressed: () {print('gênero');}, 
-                        ),
                         ],)
                       ]
                     ),
