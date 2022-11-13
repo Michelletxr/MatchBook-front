@@ -1,12 +1,9 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last
 import 'package:flutter/material.dart';
-import "Home/Home.dart";
+import "package:match_book_front/Login/Login.dart";
 
-
-void main() => runApp(
-  MaterialApp(
-    home: Home(),
-    color: Colors.pink,
-  )
-);
-
+void main() {
+  runApp(MaterialApp(
+    title: "Match book",
+    home: Login(),
+  ));
+}
