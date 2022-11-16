@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'dart:async';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+import 'package:match_book_front/Login/login.dart';
+import "package:match_book_front/Home/Home.dart";
+
+const request = "http://127.0.0.1:8000/api/authentication/";
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -81,10 +87,55 @@ class _RegisterState extends State<Register> {
                     const TextStyle(color: Colors.blueAccent, fontSize: 25.0),
                 controller: passwordController,
               ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                child: SizedBox(
+                  height: 50.0,
+                  width: 20.0,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        // _calcular();
+                        registerUser(nameController.text, emailController.text,
+                            passwordController.text, context);
+                      }
+                    },
+                    child: const Text(
+                      "Registrar",
+                      style: TextStyle(color: Colors.white, fontSize: 20.0),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+}
+
+Future registerUser(String fullname, String username, String password,
+    BuildContext context) async {
+  final response = await http.post(
+    Uri.parse('${request}register/'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'fullname': fullname,
+      'username': username,
+      'password': password,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    print('data: DEU BOM');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Home()),
+    );
+  } else {
+    print('data: NUM DEU BOM');
   }
 }
