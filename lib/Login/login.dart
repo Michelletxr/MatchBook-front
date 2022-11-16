@@ -116,6 +116,5 @@ Future loginUser(String username, String password, BuildContext context) async {
     );
   } else {
     print('data: NUM DEU BOM');
-    
   }
 }
