@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -71,22 +73,40 @@ class _LoginState extends State<Login> {
               ),
               Padding(
                   padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                  child: Container(
-                      height: 50.0,
-                      width: 20.0,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            // _calcular();
-                            loginUser(
-                                emailController.text, passwordController.text);
-                          }
-                        },
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(color: Colors.white, fontSize: 20.0),
-                        ),
-                      ))),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                          height: 50.0,
+                          width: 150.0,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                // _calcular();
+                                loginUser(emailController.text,
+                                    passwordController.text);
+                              }
+                            },
+                            child: const Text(
+                              "Login",
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 20.0),
+                            ),
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                        child: Text('ou'),
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => 
+                            //Result()
+                            //Aqui irei colocar a página de register
+                            ))
+                            }                           
+                           ,
+                          child: Text("Registra-se"))
+                    ],
+                  )),
             ],
           ),
         ),
