@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:match_book_front/Login/login.dart';
+import "package:match_book_front/Home/Home.dart";
 
 const request = "http://127.0.0.1:8000/api/authentication/";
 
@@ -79,7 +80,7 @@ class _LoginState extends State<Login> {
                           if (_formKey.currentState!.validate()) {
                             // _calcular();
                             loginUser(
-                                emailController.text, passwordController.text);
+                                emailController.text, passwordController.text, context);
                           }
                         },
                         child: const Text(
@@ -95,7 +96,7 @@ class _LoginState extends State<Login> {
   }
 }
 
-Future loginUser(String username, String password) async {
+Future loginUser(String username, String password, BuildContext context) async {
   final response = await http.post(
     Uri.parse('${request}login/'),
     headers: <String, String>{
@@ -108,8 +109,12 @@ Future loginUser(String username, String password) async {
   );
 
   if (response.statusCode == 200) {
-    print('data:DEU BOM');
+    print('data: DEU BOM');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Home()),
+    );
   } else {
-    print('data:NUM DEU BOM');
+    print('data: NUM DEU BOM');
   }
 }
