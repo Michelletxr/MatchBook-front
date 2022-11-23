@@ -134,7 +134,7 @@ Future registerUser(String fullname, String username, String password,
     }),
   );
 
-  if (response.statusCode == 200) {
+  if (response.statusCode == 201) {
     print('data: DEU BOM');
     Navigator.push(
       context,

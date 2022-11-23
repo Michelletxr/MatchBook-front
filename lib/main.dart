@@ -5,6 +5,6 @@ import 'package:match_book_front/Register/register.dart';
 void main() {
   runApp(MaterialApp(
     title: "Match book",
-    home: Register(),
+    home: Login(),
   ));
 }

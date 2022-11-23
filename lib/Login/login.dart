@@ -103,7 +103,7 @@ Future loginUser(String username, String password, BuildContext context) async {
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(<String, String>{
-      'username': username,
+      'email': username,
       'password': password,
     }),
   );
