@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:match_book_front/Home/Home.dart';
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:match_book_front/Login/login.dart';
-import "package:match_book_front/Home/Home.dart";
+import 'package:match_book_front/Register/register.dart';
 
 const request = "https://match-book.up.railway.app/api/authentication/";
 
@@ -101,7 +102,8 @@ class _LoginState extends State<Login> {
                           onPressed: () {
                             Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => Home()
+                                MaterialPageRoute(
+                                    builder: (context) => Register()
                                     //Aqui irei colocar a página de register
                                     ));
                           },
