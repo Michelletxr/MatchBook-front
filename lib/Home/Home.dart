@@ -17,7 +17,7 @@ class Home extends StatelessWidget {
             ),
           ),
           centerTitle: true,
-          backgroundColor: Colors.pink,
+          backgroundColor: Colors.blueAccent,
           elevation: 0,
         ),
         body: CustomScrollView(
