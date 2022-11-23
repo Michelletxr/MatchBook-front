@@ -9,7 +9,7 @@ import 'dart:convert';
 import 'package:match_book_front/Login/login.dart';
 import 'package:match_book_front/Register/register.dart';
 
-const request = "http://127.0.0.1:8000/api/authentication/";
+const request = "https://match-book.up.railway.app/api/authentication/";
 
 class Login extends StatefulWidget {
   @override
@@ -125,7 +125,7 @@ Future loginUser(String username, String password, BuildContext context) async {
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(<String, String>{
-      'username': username,
+      'email': username,
       'password': password,
     }),
   );

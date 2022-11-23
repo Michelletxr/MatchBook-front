@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:match_book_front/Login/login.dart';
 import "package:match_book_front/Home/Home.dart";
 
-const request = "http://127.0.0.1:8000/api/authentication/";
+const request = "https://match-book.up.railway.app/api/authentication/";
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -117,25 +117,31 @@ class _RegisterState extends State<Register> {
 
 Future registerUser(String fullname, String username, String password,
     BuildContext context) async {
+    String first_name = fullname.split(" ")[0];
+    String last_name = fullname.split(" ")[1];
   final response = await http.post(
-    Uri.parse('${request}register/'),
+    Uri.parse('${request}users/'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(<String, String>{
-      'fullname': fullname,
-      'username': username,
+      'first_name': first_name,
+      'last_name': last_name,
+      'email': username,
       'password': password,
+      'latitude': '0',
+      'longitude': '0'
     }),
   );
 
-  if (response.statusCode == 200) {
+  if (response.statusCode == 201) {
     print('data: DEU BOM');
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Home()),
     );
   } else {
+    print(response.body);
     print('data: NUM DEU BOM');
   }
 }
