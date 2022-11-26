@@ -44,7 +44,8 @@ class _LoginState extends State<Login> {
       ), // app bar
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+        // padding: const EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 0.0),
+        padding: const EdgeInsets.symmetric(vertical: 100.0, horizontal: 20),
         child: Form(
           key: _formKey,
           child: Column(
