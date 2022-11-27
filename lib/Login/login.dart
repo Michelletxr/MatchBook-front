@@ -107,7 +107,7 @@ class _LoginState extends State<Login> {
                                     //Aqui irei colocar a página de register
                                     ));
                           },
-                          child: Text("Registrar-se"))
+                          child: Text("Registra-se"))
                     ],
                   )),
             ],
@@ -136,6 +136,7 @@ Future loginUser(String username, String password, BuildContext context) async {
       MaterialPageRoute(builder: (context) => Home()),
     );
   } else {
+    print(response.statusCode);
     print('data: NUM DEU BOM');
   }
 }

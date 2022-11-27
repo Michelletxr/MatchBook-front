@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'dart:async';
@@ -64,11 +66,11 @@ class _RegisterState extends State<Register> {
                     ),
                     height: 120.0,
                     width: 120.0,
-                    child: const Icon(
+                    child: profileImage == null ? const Icon(
                       Icons.account_circle_rounded,
                       color: Colors.white,
                       size: 120,
-                    ),
+                    ) : Image.file(File(profileImage!.path)),
                   ),
                   Positioned(
                     top: 76,
@@ -141,7 +143,7 @@ class _RegisterState extends State<Register> {
                       if (_formKey.currentState!.validate()) {
                         // _calcular();
                         registerUser(nameController.text, emailController.text,
-                            passwordController.text, context);
+                            passwordController.text, profileImage, context);
                       }
                     },
                     child: const Text(
@@ -159,10 +161,15 @@ class _RegisterState extends State<Register> {
   }
 }
 
-Future registerUser(String fullname, String username, String password,
+Future registerUser(String fullname, String username, String password, XFile? profileImage,
     BuildContext context) async {
   String first_name = fullname.split(" ")[0];
-  String last_name = fullname.split(" ")[1];
+  String last_name = '';
+
+  if (fullname.split(" ").length > 1) {
+    last_name = fullname.split(" ")[1];
+  }
+
   final response = await http.post(
     Uri.parse('${request}users/'),
     headers: <String, String>{
@@ -178,14 +185,55 @@ Future registerUser(String fullname, String username, String password,
     }),
   );
 
-  if (response.statusCode == 201) {
-    print('data: DEU BOM');
+  if (response.statusCode >= 400) {
+    print('status code: ${response.statusCode}');
+    print(response.body);
+    return;
+  }
+
+  if (profileImage == null) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Home()),
     );
-  } else {
-    print(response.body);
-    print('data: NUM DEU BOM');
+    return;
   }
+
+  final response_login = await http.post(
+    Uri.parse('${request}login/'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'email': username,
+      'password': password,
+    }),
+    );
+
+    if (response_login.statusCode >= 400) {
+      print('status code: ${response_login.statusCode}');
+      print(response_login.body);
+      return;
+    }
+
+    String accessToken = jsonDecode(response_login.body)['access'];
+    Map<String, String> headers = { 'Authorization': 'Bearer $accessToken' };
+
+    var image_request = http.MultipartRequest('PUT', Uri.parse('${request}image/'));
+    image_request.files.add(http.MultipartFile.fromBytes('image', File(profileImage!.path).readAsBytesSync(), filename: profileImage!.path));
+    image_request.headers.addAll(headers);
+
+    var res = await image_request.send();
+
+    if (res.statusCode >= 400) {
+      print('status code: ${res.statusCode}');
+      print(res.reasonPhrase);
+      print(await res.stream.bytesToString());
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Home()),
+    );
 }
