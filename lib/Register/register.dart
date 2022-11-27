@@ -4,6 +4,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import 'package:image_picker/image_picker.dart';
+
 import 'package:match_book_front/Login/login.dart';
 import "package:match_book_front/Home/Home.dart";
 
@@ -17,6 +19,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  XFile? profileImage;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController localizationController = TextEditingController();
@@ -51,7 +54,48 @@ class _RegisterState extends State<Register> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              const Icon(Icons.circle, size: 120, color: Colors.blueAccent),
+              Stack(
+                alignment: AlignmentDirectional.center,
+                children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey,
+                    ),
+                    height: 120.0,
+                    width: 120.0,
+                    child: const Icon(
+                      Icons.account_circle_rounded,
+                      color: Colors.white,
+                      size: 120,
+                    ),
+                  ),
+                  Positioned(
+                    top: 76,
+                    right: 130,
+                    child: Align(
+                      child: FloatingActionButton.small(
+                        onPressed: () async {
+                          final ImagePicker picker = ImagePicker();
+                          try {
+                            XFile? file = await picker.pickImage(
+                                source: ImageSource.gallery);
+
+                            if (file != null) {
+                              setState(() => profileImage = file);
+                            }
+                          } catch (e) {
+                            print(e);
+                          }
+                        },
+                        backgroundColor: Colors.blueAccent,
+                        elevation: 2,
+                        child: const Icon(Icons.add_circle),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               TextFormField(
                 keyboardType: TextInputType.name,
                 decoration: const InputDecoration(
@@ -117,8 +161,8 @@ class _RegisterState extends State<Register> {
 
 Future registerUser(String fullname, String username, String password,
     BuildContext context) async {
-    String first_name = fullname.split(" ")[0];
-    String last_name = fullname.split(" ")[1];
+  String first_name = fullname.split(" ")[0];
+  String last_name = fullname.split(" ")[1];
   final response = await http.post(
     Uri.parse('${request}users/'),
     headers: <String, String>{
