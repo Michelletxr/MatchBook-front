@@ -44,7 +44,8 @@ class _LoginState extends State<Login> {
       ), // app bar
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+        // padding: const EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 0.0),
+        padding: const EdgeInsets.symmetric(vertical: 100.0, horizontal: 20),
         child: Form(
           key: _formKey,
           child: Column(
@@ -79,7 +80,7 @@ class _LoginState extends State<Login> {
                     children: [
                       SizedBox(
                           height: 50.0,
-                          width: 150.0,
+                          width: 90,
                           child: ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
@@ -94,20 +95,35 @@ class _LoginState extends State<Login> {
                                   color: Colors.white, fontSize: 20.0),
                             ),
                           )),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                        child: Text('ou'),
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Register()
-                                    //Aqui irei colocar a página de register
-                                    ));
-                          },
-                          child: Text("Registra-se"))
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          TextButton(
+                              style: TextButton.styleFrom(
+                                padding:
+                                    EdgeInsets.fromLTRB(50.0, 3.0, 10.0, 3.0),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Register()
+                                        //Aqui irei colocar a página de register
+                                        ));
+                              },
+                              child: Text("Registra-se")),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Register()
+                                        //Aqui irei colocar a página de register
+                                        ));
+                              },
+                              child: Text("Esqueceu a senha?"))
+                        ],
+                      )
                     ],
                   )),
             ],
