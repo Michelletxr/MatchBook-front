@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:match_book_front/Profile/profile.dart';
 
 class Home extends StatelessWidget {
   //const Home({super.key})
@@ -122,7 +123,12 @@ class Home extends StatelessWidget {
             IconButton(
                 onPressed: () {}, icon: Icon(Icons.search), color: Colors.grey),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Profile()),
+                  );
+                },
                 icon: Icon(Icons.account_box_rounded),
                 color: Colors.grey)
           ],
