@@ -8,7 +8,116 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: Drawer(),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              SizedBox(
+                height: 140.0,
+                child:DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                ),
+                child: 
+                Row(children: [
+                  CircleAvatar(
+                    radius: 30.0,
+                    child: ClipRRect(
+                      child: Image.asset( 
+                        "imagens/foto-perfil.jpg",
+                        width: 150.0,
+                        height: 150.0,
+                        fit: BoxFit.cover,
+                        ),
+                      borderRadius: BorderRadius.circular(100.0),
+                      )
+                  ),
+                  SizedBox(
+                    width: 40,
+                  ),
+                  Text(
+                    'Rodrigo Antunes',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 17,
+                    ),
+                    ),
+                ],),
+              ),
+              ),
+              ListTile(
+                title: Text(
+                  'Livros',
+                  style: TextStyle(
+                  color: Color(0xFFB0BEC5),  
+                  ),
+                  ),
+                leading: Icon(Icons.book),   
+                enabled: false,
+                tileColor: Color(0xFFECEFF1),           
+                onTap: (){
+
+                },
+              ),
+              ListTile(
+                title: Text('Meus Livros'),
+                leading: Icon(Icons.menu_book),
+                onTap: (){
+
+                },
+              ),
+              ListTile(
+                title: Text('Livros Desejados'),
+                leading: Icon(Icons.bookmark),
+                onTap: (){
+
+                },
+              ),
+              ListTile(
+                title: Text('Empréstimos'),
+                leading: Icon(Icons.people_alt),
+                onTap: (){
+
+                },
+              ),
+              ListTile(
+                title: Text(
+                  'Conta',
+                  style: TextStyle(
+                    color: Color(0xFFB0BEC5),  
+                  )
+                  ),
+                tileColor: Color(0xFFECEFF1),
+                leading: Icon(Icons.person),
+                enabled: false,
+                onTap: (){
+
+                },
+              ),
+              ListTile(
+                title: Text('Configurações'),
+                leading: Icon(Icons.settings),
+                onTap: (){
+
+                },
+              ),
+              ListTile(
+                title: Text('Segurança'),
+                leading: Icon(Icons.security),
+                onTap: (){
+
+                },
+              ),
+              ListTile(
+                title: Text('Ajuda'),
+                leading: Icon(Icons.help),
+                onTap: (){
+
+                },
+              )
+            ],
+          ),
+        ),
         appBar: AppBar(
           title: Text(
             "Livros perto de você",
