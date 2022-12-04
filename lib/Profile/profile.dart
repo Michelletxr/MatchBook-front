@@ -26,7 +26,6 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   late String name = "";
-  // ignore: avoid_init_to_null
   late String? imageURL = null;
 
   @override
@@ -35,11 +34,12 @@ class _ProfileState extends State<Profile> {
     getUser("991c3d10-6ebb-4cab-a813-da7b2fd4888f").then((value) {
       final Response test = value;
       final te = json.decode(test.body);
+      final image = te["profile_image"];
       getBooks();
 
       setState(() {
-        name = '${te["first_name"]}  ${te["last_name"]}';
-        imageURL = te["profile_image"];
+        name = te["first_name"] + " " + te["last_name"];
+        imageURL = image['url'];
       });
     });
   }
@@ -72,7 +72,12 @@ class _ProfileState extends State<Profile> {
                           height: 150.0,
                           fit: BoxFit.cover,
                         )
-                      : Image.network(imageURL!),
+                      : Image.network(
+                          imageURL!,
+                          width: 150.0,
+                          height: 150.0,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               // ignore: prefer_const_constructors
