@@ -8,6 +8,6 @@ void main() {
   runApp(MaterialApp(
     title: "Match book",
     // home: Login(),
-    home: Profile(),
+    home: Login(),
   ));
 }

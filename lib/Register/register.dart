@@ -34,6 +34,7 @@ class _RegisterState extends State<Register> {
     emailController = TextEditingController();
     localizationController = TextEditingController();
     passwordController = TextEditingController();
+    profileImage = XFile('');
     _formKey.currentState!.reset();
   }
 
@@ -41,7 +42,7 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Register"),
+        title: const Text("Registrar"),
         centerTitle: true,
         backgroundColor: Colors.blueAccent,
         actions: <Widget>[
@@ -50,7 +51,7 @@ class _RegisterState extends State<Register> {
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+        padding: const EdgeInsets.symmetric(vertical: 100.0, horizontal: 20),
         child: Form(
           key: _formKey,
           child: Column(
@@ -72,11 +73,19 @@ class _RegisterState extends State<Register> {
                             color: Colors.white,
                             size: 120,
                           )
-                        : Image.file(File(profileImage!.path)),
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(100.0),
+                            child: Image.file(
+                              File(profileImage!.path),
+                              width: 150.0,
+                              height: 150.0,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                   ),
                   Positioned(
-                    top: 76,
-                    right: 130,
+                    top: 77,
+                    right: 115,
                     child: Align(
                       child: FloatingActionButton.small(
                         onPressed: () async {
@@ -94,7 +103,9 @@ class _RegisterState extends State<Register> {
                         },
                         backgroundColor: Colors.blueAccent,
                         elevation: 2,
-                        child: const Icon(Icons.add_circle),
+                        child: profileImage == null
+                            ? const Icon(Icons.add_circle)
+                            : const Icon(Icons.edit),
                       ),
                     ),
                   ),
