@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:match_book_front/Profile/profile.dart';
 
 class Home extends StatelessWidget {
-  //const Home({super.key})
   @override
   @override
   Widget build(BuildContext context) {

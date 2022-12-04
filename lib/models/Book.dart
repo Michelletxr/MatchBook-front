@@ -21,19 +21,12 @@ class Book {
         author: json['authors']);
   }
 
-  String get _getDescription {
-    String msg = "Não há descrição";
-    if (sinopse != null) {
-      msg = sinopse;
-    }
-    return msg;
-  }
-
-  String _getAuthor() {
-    String msg = '';
-    if (author != null) {
-      msg = author[0];
-    }
-    return msg;
+  factory Book.fromJsonApi(Map<String, dynamic> json) {
+    return Book(
+        name: json['name'],
+        sinopse: json['sinopse'],
+        imageLinks: json['imageLink'],
+        lauch_date: json['launch_date'],
+        author: json['author']);
   }
 }

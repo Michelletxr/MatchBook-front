@@ -67,16 +67,6 @@ class _DetailState extends State<DetailBook> {
                         )),
                       ],
                     )),
-                const Spacer(),
-                Container(
-                    margin: const EdgeInsets.only(right: 30),
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        SaveBook(widget._book);
-                      },
-                      icon: const Icon(Icons.add_box_outlined),
-                      label: const Text("Adicionar"),
-                    )),
               ],
             )),
         const Divider(
@@ -118,34 +108,4 @@ String _getAuthor(author) {
     msg = author[0];
   }
   return msg;
-}
-
-String _getImageLinks(image) {
-  String msg = '';
-  if (image != null) {
-    msg = image['smallThumbnail'];
-  }
-  return msg;
-}
-
-Future SaveBook(Book book) async {
-  print(book.name);
-  var ip = '192.168.100.22';
-  var urlRequest = 'http://${ip}:8000/api/book/books/';
-  final response = await http.post(
-    Uri.parse(urlRequest),
-    headers: <String, String>{
-      'Content-Type': 'application/json',
-      'X-CSRFToken':
-          'GwwBa7cBRrPzJ2B3Dhg1JCXd1hEYvscDRI36icu5KH70XO95sUdbjyWx5OUYElBA',
-    },
-    body: jsonEncode(<String, String>{
-      'name': book.name,
-      'user': "c2d98b61-0d1d-41ab-8295-487685f02695",
-      'author': _getAuthor(book.author),
-      'lauch_date': "2022-12-02T20:39:39.511Z",
-      'sinopse': _getDescription(book.sinopse),
-      'imageLink': _getImageLinks(book.imageLinks)
-    }),
-  );
 }
