@@ -11,12 +11,13 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:match_book_front/constants.dart';
 
-const request = "https://match-book.up.railway.app/api/authentication/";
 import 'package:match_book_front/RegisterBook/registerBook.dart';
 import 'package:match_book_front/models/Book.dart';
 import 'package:match_book_front/DetailBook/detail.dart';
 
 import '../Home/Home.dart';
+
+const request = "https://match-book.up.railway.app/api/authentication/";
 
 class Profile extends StatefulWidget {
   @override
@@ -24,21 +25,20 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  // late String text;
-
   late String name = "";
+  // ignore: avoid_init_to_null
   late String? imageURL = null;
 
   @override
   void initState() {
     super.initState();
-    getUser("ccb1d7c6-24f9-4801-876d-c613035adca6").then((value) {
+    getUser("991c3d10-6ebb-4cab-a813-da7b2fd4888f").then((value) {
       final Response test = value;
       final te = json.decode(test.body);
-    getBooks();
+      getBooks();
 
       setState(() {
-        name = te["first_name"] + " " + te["last_name"];
+        name = '${te["first_name"]}  ${te["last_name"]}';
         imageURL = te["profile_image"];
       });
     });
@@ -46,8 +46,6 @@ class _ProfileState extends State<Profile> {
 
   List<Book> booksList = [];
   final ScrollController _scrollController = ScrollController();
-
- 
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +77,8 @@ class _ProfileState extends State<Profile> {
               ),
               // ignore: prefer_const_constructors
               Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 100.0, vertical: 20.0),
                 child: Center(
                   child: Text(
                     name,
@@ -88,8 +88,6 @@ class _ProfileState extends State<Profile> {
                         decoration: TextDecoration.none),
                   ),
                 ),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 100.0, vertical: 20.0),
               ),
               Divider(
                 color: Colors.black54,
@@ -120,16 +118,17 @@ class _ProfileState extends State<Profile> {
                 color: Colors.black54,
               ),
               Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 110.0, vertical: 20.0),
-                child: Text(
-                  "Meus Livros",
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black54,
-                      decoration: TextDecoration.none),
-                ),
-              ),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 110.0, vertical: 20.0),
+                  child: Center(
+                    child: Text(
+                      "Meus Livros",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black54,
+                          decoration: TextDecoration.none),
+                    ),
+                  )),
 
               Flexible(
                   // ignore: unnecessary_new
@@ -220,7 +219,7 @@ class _ProfileState extends State<Profile> {
 
 Future getUser(String id) async {
   final response = await http.get(
-    Uri.parse('${baseURL}users/${id}'),
+    Uri.parse('${baseURL}users/$id'),
   );
 
   return response;
