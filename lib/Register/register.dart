@@ -181,7 +181,8 @@ class _RegisterState extends State<Register> {
   }
 }
 
-Future registerUser(String fullname, String username, String password, XFile? profileImage, BuildContext context) async {
+Future registerUser(String fullname, String username, String password,
+    XFile? profileImage, BuildContext context) async {
   ph.PermissionStatus permission = await ph.Permission.location.request();
   if (permission.isDenied) {
     print("Sem permissão");
@@ -253,7 +254,7 @@ Future registerUser(String fullname, String username, String password, XFile? pr
 
   String accessToken = jsonDecode(response_login.body)['access'];
   globals.accessToken = accessToken;
-  globals.id = jsonDecode(response_login.body)['user_id'];
+
   Map<String, String> headers = {'Authorization': 'Bearer $accessToken'};
 
   var image_request =
@@ -272,10 +273,14 @@ Future registerUser(String fullname, String username, String password, XFile? pr
     return;
   }
 
-  final getUserResponse = await http.get(Uri.parse('${request}users/${globals.id}/'));
+  final getUserResponse =
+      await http.get(Uri.parse('${request}users/${globals.id}/'));
 
   globals.imgUrl = jsonDecode(getUserResponse.body)['profile_image']['url'];
-  globals.fullname = jsonDecode(getUserResponse.body)['first_name'] + " " + jsonDecode(getUserResponse.body)['last_name'];
+  globals.fullname = jsonDecode(getUserResponse.body)['first_name'] +
+      " " +
+      jsonDecode(getUserResponse.body)['last_name'];
+  globals.id = jsonDecode(getUserResponse.body)['user_id'];
 
   Navigator.push(
     context,
