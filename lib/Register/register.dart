@@ -39,7 +39,9 @@ class _RegisterState extends State<Register> {
     emailController = TextEditingController();
     localizationController = TextEditingController();
     passwordController = TextEditingController();
-    profileImage = XFile('');
+    setState(() {
+      profileImage = null;
+    });
     _formKey.currentState!.reset();
   }
 
