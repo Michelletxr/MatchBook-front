@@ -15,6 +15,8 @@ import 'package:match_book_front/RegisterBook/registerBook.dart';
 import 'package:match_book_front/models/Book.dart';
 import 'package:match_book_front/DetailBook/detail.dart';
 
+import 'package:match_book_front/Global/globals.dart' as globals;
+
 import '../Home/Home.dart';
 
 const request = "https://match-book.up.railway.app/api/authentication/";
@@ -31,7 +33,7 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    getUser("991c3d10-6ebb-4cab-a813-da7b2fd4888f").then((value) {
+    getUser(globals.id).then((value) {
       final Response test = value;
       final te = json.decode(test.body);
       final image = te["profile_image"];
@@ -83,7 +85,7 @@ class _ProfileState extends State<Profile> {
               // ignore: prefer_const_constructors
               Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 100.0, vertical: 20.0),
+                    horizontal: 0.0, vertical: 20.0),
                 child: Center(
                   child: Text(
                     name,

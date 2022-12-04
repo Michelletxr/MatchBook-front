@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:match_book_front/Profile/profile.dart';
+import 'package:match_book_front/Global/globals.dart' as globals;
 
 class Home extends StatelessWidget {
   @override
@@ -21,11 +22,18 @@ class Home extends StatelessWidget {
                   CircleAvatar(
                     radius: 30.0,
                     child: ClipRRect(
-                      child: Image.asset( 
+                      child: globals.imgUrl == null ?
+                       Image.asset( 
                         "imagens/foto-perfil.jpg",
                         width: 150.0,
                         height: 150.0,
                         fit: BoxFit.cover,
+                        ) : 
+                        Image.network(
+                          globals.imgUrl!,
+                          width: 150.0,
+                          height: 150.0,
+                          fit: BoxFit.cover,
                         ),
                       borderRadius: BorderRadius.circular(100.0),
                       )
@@ -34,7 +42,7 @@ class Home extends StatelessWidget {
                     width: 40,
                   ),
                   Text(
-                    'Rodrigo Antunes',
+                    globals.fullname,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 17,

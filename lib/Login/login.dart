@@ -8,6 +8,8 @@ import 'dart:convert';
 
 import 'package:match_book_front/Login/login.dart';
 import 'package:match_book_front/Register/register.dart';
+import 'package:match_book_front/Global/globals.dart' as globals;
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 const request = "https://match-book.up.railway.app/api/authentication/";
 
@@ -147,6 +149,14 @@ Future loginUser(String username, String password, BuildContext context) async {
   );
 
   if (response.statusCode == 200) {
+    globals.accessToken = jsonDecode(response.body)['access'];
+    globals.id = JwtDecoder.decode(globals.accessToken)['user_id'];
+
+    final getUserResponse = await http.get(Uri.parse('${request}users/${globals.id}/'));
+
+    globals.imgUrl = jsonDecode(getUserResponse.body)['profile_image'] != null ? jsonDecode(getUserResponse.body)['profile_image']['url'] : '';
+    globals.fullname = jsonDecode(getUserResponse.body)['first_name'] + " " + jsonDecode(getUserResponse.body)['last_name'];
+
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Home()),

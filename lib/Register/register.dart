@@ -10,6 +10,11 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:match_book_front/Login/login.dart';
 import "package:match_book_front/Home/Home.dart";
+import 'package:permission_handler/permission_handler.dart' as ph;
+import 'package:geolocator/geolocator.dart';
+
+import 'package:match_book_front/Global/globals.dart' as globals;
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 const request = "https://match-book.up.railway.app/api/authentication/";
 
@@ -163,8 +168,23 @@ class _RegisterState extends State<Register> {
   }
 }
 
-Future registerUser(String fullname, String username, String password,
-    XFile? profileImage, BuildContext context) async {
+Future registerUser(String fullname, String username, String password, XFile? profileImage, BuildContext context) async {
+  ph.PermissionStatus permission = await ph.Permission.location.request();
+  if (permission.isDenied) {
+    print("Sem permissão");
+    return;
+  }
+
+  bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+  if (!serviceEnabled) {
+    print("Serviço de localização desabilitado");
+    return;
+  }
+
+  Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high);
+
   String first_name = fullname.split(" ")[0];
   String last_name = '';
 
@@ -182,8 +202,8 @@ Future registerUser(String fullname, String username, String password,
       'last_name': last_name != '' ? last_name : '',
       'email': username,
       'password': password,
-      'latitude': '0',
-      'longitude': '0'
+      'latitude': position.latitude.toString(),
+      'longitude': position.longitude.toString(),
     }),
   );
 
@@ -219,6 +239,8 @@ Future registerUser(String fullname, String username, String password,
   }
 
   String accessToken = jsonDecode(response_login.body)['access'];
+  globals.accessToken = accessToken;
+  globals.id = jsonDecode(response_login.body)['user_id'];
   Map<String, String> headers = {'Authorization': 'Bearer $accessToken'};
 
   var image_request =
@@ -236,6 +258,11 @@ Future registerUser(String fullname, String username, String password,
     print(await res.stream.bytesToString());
     return;
   }
+
+  final getUserResponse = await http.get(Uri.parse('${request}users/${globals.id}/'));
+
+  globals.imgUrl = jsonDecode(getUserResponse.body)['profile_image']['url'];
+  globals.fullname = jsonDecode(getUserResponse.body)['first_name'] + " " + jsonDecode(getUserResponse.body)['last_name'];
 
   Navigator.push(
     context,
