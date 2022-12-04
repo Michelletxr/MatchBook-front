@@ -113,7 +113,7 @@ class _LoginState extends State<Login> {
                                         //Aqui irei colocar a página de register
                                         ));
                               },
-                              child: Text("Registra-se")),
+                              child: Text("Registrar-se")),
                           TextButton(
                               onPressed: () {
                                 Navigator.push(
