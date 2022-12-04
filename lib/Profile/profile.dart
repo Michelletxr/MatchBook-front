@@ -1,22 +1,44 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
+import 'package:match_book_front/constants.dart';
 
-class Profile extends StatelessWidget {
-  const Profile({
-    super.key,
-    this.color = Colors.white,
-    this.child,
-  });
+const request = "https://match-book.up.railway.app/api/authentication/";
 
-  final Color color;
-  final Widget? child;
+class Profile extends StatefulWidget {
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  // late String text;
+
+  late String name = "";
+  late String? imageURL = null;
+
+  @override
+  void initState() {
+    super.initState();
+    getUser("ccb1d7c6-24f9-4801-876d-c613035adca6").then((value) {
+      final Response test = value;
+      final te = json.decode(test.body);
+
+      setState(() {
+        name = te["first_name"] + " " + te["last_name"];
+        imageURL = te["profile_image"];
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-          color: color,
+          color: Colors.white,
           padding:
               const EdgeInsets.symmetric(vertical: 100.0, horizontal: 20.0),
           child: Form(
@@ -29,23 +51,27 @@ class Profile extends StatelessWidget {
               CircleAvatar(
                 radius: 70.0,
                 child: ClipRRect(
-                  child: Image.asset(
-                    "imagens/foto-perfil.jpg",
-                    width: 150.0,
-                    height: 150.0,
-                    fit: BoxFit.cover,
-                  ),
                   borderRadius: BorderRadius.circular(100.0),
+                  child: imageURL == null
+                      ? Image.asset(
+                          "imagens/foto-perfil.jpg",
+                          width: 150.0,
+                          height: 150.0,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.network(imageURL!),
                 ),
               ),
               // ignore: prefer_const_constructors
               Container(
-                child: Text(
-                  "Rodrigo Antunes",
-                  style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.black54,
-                      decoration: TextDecoration.none),
+                child: Center(
+                  child: Text(
+                    name,
+                    style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                        decoration: TextDecoration.none),
+                  ),
                 ),
                 padding: const EdgeInsets.symmetric(
                     horizontal: 100.0, vertical: 20.0),
@@ -156,4 +182,12 @@ class Profile extends StatelessWidget {
           ],
         ));
   }
+}
+
+Future getUser(String id) async {
+  final response = await http.get(
+    Uri.parse('${baseURL}users/${id}'),
+  );
+
+  return response;
 }
