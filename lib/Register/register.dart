@@ -254,6 +254,7 @@ Future registerUser(String fullname, String username, String password,
 
   String accessToken = jsonDecode(response_login.body)['access'];
   globals.accessToken = accessToken;
+  globals.id = JwtDecoder.decode(globals.accessToken)['user_id'];
 
   Map<String, String> headers = {'Authorization': 'Bearer $accessToken'};
 
@@ -276,11 +277,10 @@ Future registerUser(String fullname, String username, String password,
   final getUserResponse =
       await http.get(Uri.parse('${request}users/${globals.id}/'));
 
-  globals.imgUrl = jsonDecode(getUserResponse.body)['profile_image']['url'];
+  globals.imgUrl = jsonDecode(getUserResponse.body)['profile_image']?['url'];
   globals.fullname = jsonDecode(getUserResponse.body)['first_name'] +
       " " +
       jsonDecode(getUserResponse.body)['last_name'];
-  globals.id = jsonDecode(getUserResponse.body)['user_id'];
 
   Navigator.push(
     context,
