@@ -66,11 +66,13 @@ class _RegisterState extends State<Register> {
                     ),
                     height: 120.0,
                     width: 120.0,
-                    child: profileImage == null ? const Icon(
-                      Icons.account_circle_rounded,
-                      color: Colors.white,
-                      size: 120,
-                    ) : Image.file(File(profileImage!.path)),
+                    child: profileImage == null
+                        ? const Icon(
+                            Icons.account_circle_rounded,
+                            color: Colors.white,
+                            size: 120,
+                          )
+                        : Image.file(File(profileImage!.path)),
                   ),
                   Positioned(
                     top: 76,
@@ -161,8 +163,8 @@ class _RegisterState extends State<Register> {
   }
 }
 
-Future registerUser(String fullname, String username, String password, XFile? profileImage,
-    BuildContext context) async {
+Future registerUser(String fullname, String username, String password,
+    XFile? profileImage, BuildContext context) async {
   String first_name = fullname.split(" ")[0];
   String last_name = '';
 
@@ -177,7 +179,7 @@ Future registerUser(String fullname, String username, String password, XFile? pr
     },
     body: jsonEncode(<String, String>{
       'first_name': first_name,
-      'last_name': last_name,
+      'last_name': last_name != '' ? last_name : '',
       'email': username,
       'password': password,
       'latitude': '0',
@@ -208,32 +210,35 @@ Future registerUser(String fullname, String username, String password, XFile? pr
       'email': username,
       'password': password,
     }),
-    );
+  );
 
-    if (response_login.statusCode >= 400) {
-      print('status code: ${response_login.statusCode}');
-      print(response_login.body);
-      return;
-    }
+  if (response_login.statusCode >= 400) {
+    print('status code: ${response_login.statusCode}');
+    print(response_login.body);
+    return;
+  }
 
-    String accessToken = jsonDecode(response_login.body)['access'];
-    Map<String, String> headers = { 'Authorization': 'Bearer $accessToken' };
+  String accessToken = jsonDecode(response_login.body)['access'];
+  Map<String, String> headers = {'Authorization': 'Bearer $accessToken'};
 
-    var image_request = http.MultipartRequest('PUT', Uri.parse('${request}image/'));
-    image_request.files.add(http.MultipartFile.fromBytes('image', File(profileImage!.path).readAsBytesSync(), filename: profileImage!.path));
-    image_request.headers.addAll(headers);
+  var image_request =
+      http.MultipartRequest('PUT', Uri.parse('${request}image/'));
+  image_request.files.add(http.MultipartFile.fromBytes(
+      'image', File(profileImage!.path).readAsBytesSync(),
+      filename: profileImage!.path));
+  image_request.headers.addAll(headers);
 
-    var res = await image_request.send();
+  var res = await image_request.send();
 
-    if (res.statusCode >= 400) {
-      print('status code: ${res.statusCode}');
-      print(res.reasonPhrase);
-      print(await res.stream.bytesToString());
-      return;
-    }
+  if (res.statusCode >= 400) {
+    print('status code: ${res.statusCode}');
+    print(res.reasonPhrase);
+    print(await res.stream.bytesToString());
+    return;
+  }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Home()),
-    );
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => Home()),
+  );
 }
