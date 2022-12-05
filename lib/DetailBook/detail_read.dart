@@ -35,13 +35,13 @@ class _DetailState extends State<DetailBook> {
                       ? Image.network(
                           _getImageLinks(widget._book.imageLinks),
                           fit: BoxFit.contain,
-                          height: 300,
+                          height: 200,
                           width: 300,
                         )
                       : Image.asset(
                           "imagens/not_found_book.webp",
                           fit: BoxFit.contain,
-                          height: 300,
+                          height: 200,
                           width: 300,
                         )),
             )),
@@ -104,7 +104,7 @@ class _DetailState extends State<DetailBook> {
         Padding(
             padding: const EdgeInsets.only(left: 20, top: 20),
             child: Container(
-                height: 300,
+                height: 200,
                 padding: const EdgeInsets.only(right: 10, left: 10),
                 child: Expanded(
                   child: SingleChildScrollView(
