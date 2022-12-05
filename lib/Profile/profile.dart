@@ -40,9 +40,8 @@ class _ProfileState extends State<Profile> {
       final image = te["profile_image"];
       getBooks();
       setState(() {
-        name = te["first_name"];
-        // name = te["first_name"] + " " + te["last_name"];
-        //  imageURL = image['url'];
+        name = te["first_name"] + " " + te["last_name"];
+        imageURL = image == null ? null : image['url'];
       });
     });
   }
