@@ -136,6 +136,7 @@ class _ProfileState extends State<Profile> {
                           decoration: TextDecoration.none),
                     ),
                   )),
+
               Flexible(
                   child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
