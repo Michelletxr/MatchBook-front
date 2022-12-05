@@ -25,7 +25,7 @@ class Book {
     return Book(
         name: json['name'],
         sinopse: json['sinopse'],
-        imageLinks: json['imageLink'],
+        imageLinks: json['imageLinks'],
         lauch_date: json['launch_date'],
         author: json['author']);
   }

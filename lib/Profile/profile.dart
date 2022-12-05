@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:collection';
 import 'dart:io';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -13,7 +14,7 @@ import 'package:match_book_front/constants.dart';
 
 import 'package:match_book_front/RegisterBook/registerBook.dart';
 import 'package:match_book_front/models/Book.dart';
-import 'package:match_book_front/DetailBook/detail.dart';
+import 'package:match_book_front/DetailBook/detail_read.dart';
 
 import 'package:match_book_front/Global/globals.dart' as globals;
 
@@ -105,7 +106,7 @@ class _ProfileState extends State<Profile> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: const <Widget>[
                     Text(
-                      "100 Livros",
+                      '100 Livros',
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.black54,
@@ -136,17 +137,37 @@ class _ProfileState extends State<Profile> {
                           decoration: TextDecoration.none),
                     ),
                   )),
-              /*Flexible(
-                  // ignore: unnecessary_new
-                  child: new GridView.count(
-                //childAspectRatio: 3 / 2,
-                crossAxisCount: 4,
-                crossAxisSpacing: sqrt1_2,
-                padding: EdgeInsets.all(4.0),
-                children: <Widget>[
-                  _createListView(),
-                ],
-              )),*/
+              Flexible(
+                  child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4),
+                itemCount: booksList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return InkWell(
+                      onTap: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        DetailBook(booksList[index])))
+                          },
+                      child: Card(
+                        child: booksList[index].imageLinks != null
+                            ? Image.network(
+                                booksList[index].imageLinks,
+                                fit: BoxFit.contain,
+                                height: 300,
+                                width: 300,
+                              )
+                            : Image.asset(
+                                "imagens/not_found_book.webp",
+                                fit: BoxFit.contain,
+                                height: 300,
+                                width: 300,
+                              ),
+                      ));
+                },
+              )),
               IconButton(
                   padding: EdgeInsets.only(top: 10),
                   onPressed: () {
@@ -187,30 +208,6 @@ class _ProfileState extends State<Profile> {
         ));
   }
 
-  Widget _createListView() {
-    return ListView.builder(
-        padding: const EdgeInsets.all(8),
-        controller: _scrollController,
-        shrinkWrap: true,
-        itemCount: booksList == null ? 0 : booksList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Card(
-              child: booksList[index].imageLinks != null
-                  ? Image.network(
-                      _getImageLinks(booksList[index].imageLinks),
-                      fit: BoxFit.contain,
-                      height: 300,
-                      width: 300,
-                    )
-                  : Image.asset(
-                      "imagens/not_found_book.webp",
-                      fit: BoxFit.contain,
-                      height: 300,
-                      width: 300,
-                    ));
-        });
-  }
-
   Future getBooks() async {
     var urlRequest = '${bookURL}user-books/${globals.id}';
     final response = await http.get(
@@ -224,7 +221,6 @@ class _ProfileState extends State<Profile> {
       setState(() {
         booksList = books;
       });
-      print(booksList);
     }
   }
 }

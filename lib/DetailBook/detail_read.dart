@@ -122,7 +122,8 @@ class _DetailState extends State<DetailBook> {
 String _getImageLinks(image) {
   String msg = '';
   if (image != null) {
-    msg = image['smallThumbnail'];
+    print(image.runtimeType);
+    image.runtimeType() == String ? msg = image : msg = image['smallThumbnail'];
   }
   return msg;
 }

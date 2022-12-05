@@ -275,7 +275,6 @@ class _HomeState extends State<Home> {
     final response = await http.get(
       Uri.parse(urlRequest),
     );
-    print(response.body);
     if (response.statusCode == 200) {
       List<Book> books = [];
       List<dynamic> list = json.decode(response.body);

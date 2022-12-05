@@ -116,8 +116,9 @@ class _DetailState extends State<DetailBook> {
   }
 
   Future SaveBook(Book book) async {
+    print(book);
     var urlRequest = 'https://match-book.up.railway.app/api/book/books/';
-    print(globals.id);
+    // print(globals.id);
     final response = await http.post(
       Uri.parse(urlRequest),
       headers: <String, String>{
@@ -130,7 +131,7 @@ class _DetailState extends State<DetailBook> {
         'author': _getAuthor(book.author),
         'lauch_date': "2022-12-02T20:39:39.511Z",
         'sinopse': _getDescription(book.sinopse),
-        'imageLink': _getImageLinks(book.imageLinks)
+        'imageLinks': _getImageLinks(book.imageLinks)
       }),
     );
     if (response.statusCode == 201) {
