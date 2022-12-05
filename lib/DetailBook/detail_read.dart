@@ -123,7 +123,11 @@ String _getImageLinks(image) {
   String msg = '';
   if (image != null) {
     print(image.runtimeType);
-    image.runtimeType() == String ? msg = image : msg = image['smallThumbnail'];
+    if (image is String) {
+      msg = image;
+    } else {
+      msg = image['smallThumbnail'];
+    }
   }
   return msg;
 }
