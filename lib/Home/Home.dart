@@ -1,9 +1,28 @@
-import 'package:flutter/material.dart';
-import 'package:match_book_front/Profile/profile.dart';
 import 'package:match_book_front/Global/globals.dart' as globals;
 
-class Home extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:match_book_front/Profile/profile.dart';
+import 'package:match_book_front/Global/globals.dart' as globals;
+import 'dart:async';
+import 'dart:convert';
+
+import '../DetailBook/detail_read.dart';
+import '../constants.dart';
+import '../models/Book.dart';
+
+class Home extends StatefulWidget {
   @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  List<Book> booksList = [];
+
+  initState() {
+    getBooks();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,113 +32,95 @@ class Home extends StatelessWidget {
             children: [
               SizedBox(
                 height: 140.0,
-                child:DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.blueAccent,
-                ),
-                child: 
-                Row(children: [
-                  CircleAvatar(
-                    radius: 30.0,
-                    child: ClipRRect(
-                      child: globals.imgUrl == null ?
-                       Image.asset( 
-                        "imagens/foto-perfil.jpg",
-                        width: 150.0,
-                        height: 150.0,
-                        fit: BoxFit.cover,
-                        ) : 
-                        Image.network(
-                          globals.imgUrl!,
-                          width: 150.0,
-                          height: 150.0,
-                          fit: BoxFit.cover,
+                child: DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent,
+                  ),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                          radius: 30.0,
+                          child: ClipRRect(
+                            child: globals.imgUrl == null
+                                ? Image.asset(
+                                    "imagens/foto-perfil.jpg",
+                                    width: 150.0,
+                                    height: 150.0,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.network(
+                                    globals.imgUrl!,
+                                    width: 150.0,
+                                    height: 150.0,
+                                    fit: BoxFit.cover,
+                                  ),
+                            borderRadius: BorderRadius.circular(100.0),
+                          )),
+                      SizedBox(
+                        width: 40,
+                      ),
+                      Text(
+                        globals.fullname,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
                         ),
-                      borderRadius: BorderRadius.circular(100.0),
-                      )
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    width: 40,
-                  ),
-                  Text(
-                    globals.fullname,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                    ),
-                    ),
-                ],),
-              ),
+                ),
               ),
               ListTile(
                 title: Text(
                   'Livros',
                   style: TextStyle(
-                  color: Color(0xFFB0BEC5),  
+                    color: Color(0xFFB0BEC5),
                   ),
-                  ),
-                leading: Icon(Icons.book),   
+                ),
+                leading: Icon(Icons.book),
                 enabled: false,
-                tileColor: Color(0xFFECEFF1),           
-                onTap: (){
-
-                },
+                tileColor: Color(0xFFECEFF1),
+                onTap: () {},
               ),
               ListTile(
                 title: Text('Meus Livros'),
                 leading: Icon(Icons.menu_book),
-                onTap: (){
-
-                },
+                onTap: () {},
               ),
               ListTile(
                 title: Text('Livros Desejados'),
                 leading: Icon(Icons.bookmark),
-                onTap: (){
-
-                },
+                onTap: () {},
               ),
               ListTile(
                 title: Text('Empréstimos'),
                 leading: Icon(Icons.people_alt),
-                onTap: (){
-
-                },
+                onTap: () {},
               ),
               ListTile(
-                title: Text(
-                  'Conta',
-                  style: TextStyle(
-                    color: Color(0xFFB0BEC5),  
-                  )
-                  ),
+                title: Text('Conta',
+                    style: TextStyle(
+                      color: Color(0xFFB0BEC5),
+                    )),
                 tileColor: Color(0xFFECEFF1),
                 leading: Icon(Icons.person),
                 enabled: false,
-                onTap: (){
-
-                },
+                onTap: () {},
               ),
               ListTile(
                 title: Text('Configurações'),
                 leading: Icon(Icons.settings),
-                onTap: (){
-
-                },
+                onTap: () {},
               ),
               ListTile(
                 title: Text('Segurança'),
                 leading: Icon(Icons.security),
-                onTap: (){
-
-                },
+                onTap: () {},
               ),
               ListTile(
                 title: Text('Ajuda'),
                 leading: Icon(Icons.help),
-                onTap: (){
-
-                },
+                onTap: () {},
               )
             ],
           ),
@@ -220,13 +221,24 @@ class Home extends StatelessWidget {
               ),
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
-                  return Container(
+                  return InkWell(
+                    onTap: () => {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  DetailBook(booksList[index])))
+                    },
+                    child: Container(
                       alignment: Alignment.center,
-                      child: Image(
-                        image: AssetImage('imagens/capa.jpg'),
-                      ));
+                      child: booksList[index].imageLinks != null
+                          ? Image.network(
+                              _getImageLinks(booksList[index].imageLinks))
+                          : Image.asset("/imagens/not_found_book.webp"),
+                    ),
+                  );
                 },
-                childCount: 100,
+                childCount: booksList.length,
               ),
             )
           ],
@@ -235,7 +247,14 @@ class Home extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             IconButton(
-                onPressed: () {}, icon: Icon(Icons.home), color: Colors.grey),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Home()),
+                  );
+                },
+                icon: Icon(Icons.home),
+                color: Colors.grey),
             IconButton(
                 onPressed: () {}, icon: Icon(Icons.search), color: Colors.grey),
             IconButton(
@@ -246,8 +265,32 @@ class Home extends StatelessWidget {
                   );
                 },
                 icon: Icon(Icons.account_box_rounded),
-                color: Colors.grey)
+                color: Colors.grey),
           ],
         ));
+  }
+
+  Future getBooks() async {
+    var urlRequest = '${bookURL}books-api/user/1';
+    final response = await http.get(
+      Uri.parse(urlRequest),
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      List<Book> books = [];
+      List<dynamic> list = json.decode(response.body);
+      list.forEach((element) => {books.add(Book.fromJson(element))});
+      setState(() {
+        booksList = books;
+      });
+    }
+  }
+
+  String _getImageLinks(image) {
+    String msg = '';
+    if (image != null) {
+      msg = image['smallThumbnail'];
+    }
+    return msg;
   }
 }

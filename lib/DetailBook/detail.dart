@@ -3,9 +3,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:match_book_front/constants.dart';
 import 'package:match_book_front/models/Book.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'package:match_book_front/Global/globals.dart' as globals;
+
+import '../Profile/profile.dart';
 
 class DetailBook extends StatefulWidget {
   final Book _book;
@@ -16,6 +20,7 @@ class DetailBook extends StatefulWidget {
 }
 
 class _DetailState extends State<DetailBook> {
+  bool save = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,16 +35,20 @@ class _DetailState extends State<DetailBook> {
             padding: const EdgeInsetsDirectional.fromSTEB(5, 5, 1, 1),
             child: Expanded(
                 child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: widget._book.imageLinks != null
-                  ? Image.network(
-                      widget._book.imageLinks['smallThumbnail'],
-                      fit: BoxFit.contain,
-                      height: 300,
-                      width: 500,
-                    )
-                  : const Icon(Icons.menu_book_outlined),
-            ))),
+                    borderRadius: BorderRadius.circular(20),
+                    child: widget._book.imageLinks != null
+                        ? Image.network(
+                            _getImageLinks(widget._book.imageLinks),
+                            fit: BoxFit.contain,
+                            height: 300,
+                            width: 300,
+                          )
+                        : Image.asset(
+                            "imagens/not_found_book.webp",
+                            fit: BoxFit.contain,
+                            height: 300,
+                            width: 300,
+                          )))),
         Container(
             padding: const EdgeInsets.only(top: 20.0, bottom: 10),
             width: double.infinity,
@@ -61,9 +70,9 @@ class _DetailState extends State<DetailBook> {
                           padding: const EdgeInsets.only(left: 10),
                           child: Text(widget._book.name,
                               style: const TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 12,
-                              )),
+                                  fontFamily: 'Poppins',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold)),
                         )),
                       ],
                     )),
@@ -71,8 +80,11 @@ class _DetailState extends State<DetailBook> {
                 Container(
                     margin: const EdgeInsets.only(right: 30),
                     child: ElevatedButton.icon(
-                      onPressed: () {
-                        SaveBook(widget._book);
+                      onPressed: () async {
+                        await SaveBook(widget._book);
+                        if (save) {
+                          showSuccessMessage(context);
+                        }
                       },
                       icon: const Icon(Icons.add_box_outlined),
                       label: const Text("Adicionar"),
@@ -102,6 +114,42 @@ class _DetailState extends State<DetailBook> {
       ]),
     );
   }
+
+  Future SaveBook(Book book) async {
+    var urlRequest = 'https://match-book.up.railway.app/api/book/books/';
+    print(globals.id);
+    final response = await http.post(
+      Uri.parse(urlRequest),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'accept': 'application/json'
+      },
+      body: jsonEncode(<String, String>{
+        'name': book.name,
+        'user': globals.id,
+        'author': _getAuthor(book.author),
+        'lauch_date': "2022-12-02T20:39:39.511Z",
+        'sinopse': _getDescription(book.sinopse),
+        'imageLink': _getImageLinks(book.imageLinks)
+      }),
+    );
+    if (response.statusCode == 201) {
+      save = true;
+    }
+  }
+}
+
+void showSuccessMessage(BuildContext context) async {
+  await showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text("Livro adicionado com sucesso"),
+    ),
+  );
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => Profile()),
+  );
 }
 
 String _getDescription(descri) {
@@ -126,26 +174,4 @@ String _getImageLinks(image) {
     msg = image['smallThumbnail'];
   }
   return msg;
-}
-
-Future SaveBook(Book book) async {
-  print(book.name);
-  var ip = '192.168.100.22';
-  var urlRequest = 'http://${ip}:8000/api/book/books/';
-  final response = await http.post(
-    Uri.parse(urlRequest),
-    headers: <String, String>{
-      'Content-Type': 'application/json',
-      'X-CSRFToken':
-          'GwwBa7cBRrPzJ2B3Dhg1JCXd1hEYvscDRI36icu5KH70XO95sUdbjyWx5OUYElBA',
-    },
-    body: jsonEncode(<String, String>{
-      'name': book.name,
-      'user': "c2d98b61-0d1d-41ab-8295-487685f02695",
-      'author': _getAuthor(book.author),
-      'lauch_date': "2022-12-02T20:39:39.511Z",
-      'sinopse': _getDescription(book.sinopse),
-      'imageLink': _getImageLinks(book.imageLinks)
-    }),
-  );
 }

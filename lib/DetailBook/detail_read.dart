@@ -29,17 +29,22 @@ class _DetailState extends State<DetailBook> {
         Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(5, 5, 1, 1),
             child: Expanded(
-                child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: widget._book.imageLinks != null
-                  ? Image.network(
-                      widget._book.imageLinks['smallThumbnail'],
-                      fit: BoxFit.contain,
-                      height: 300,
-                      width: 500,
-                    )
-                  : const Icon(Icons.menu_book_outlined),
-            ))),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: widget._book.imageLinks != null
+                      ? Image.network(
+                          _getImageLinks(widget._book.imageLinks),
+                          fit: BoxFit.contain,
+                          height: 300,
+                          width: 300,
+                        )
+                      : Image.asset(
+                          "imagens/not_found_book.webp",
+                          fit: BoxFit.contain,
+                          height: 300,
+                          width: 300,
+                        )),
+            )),
         Container(
             padding: const EdgeInsets.only(top: 20.0, bottom: 10),
             width: double.infinity,
@@ -61,12 +66,32 @@ class _DetailState extends State<DetailBook> {
                           padding: const EdgeInsets.only(left: 10),
                           child: Text(widget._book.name,
                               style: const TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold)),
+                        )),
+                        Expanded(
+                            child: Container(
+                          width: 200,
+                          height: 20,
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(_getAuthor(widget._book.author),
+                              style: const TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 12,
                               )),
                         )),
                       ],
                     )),
+                Spacer(),
+                Container(
+                  padding: EdgeInsets.only(right: 25, top: 10),
+                  child: Icon(
+                    Icons.favorite,
+                    size: 30,
+                    color: Colors.blueAccent,
+                  ),
+                )
               ],
             )),
         const Divider(
@@ -92,6 +117,14 @@ class _DetailState extends State<DetailBook> {
       ]),
     );
   }
+}
+
+String _getImageLinks(image) {
+  String msg = '';
+  if (image != null) {
+    msg = image['smallThumbnail'];
+  }
+  return msg;
 }
 
 String _getDescription(descri) {

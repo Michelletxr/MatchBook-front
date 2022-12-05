@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:match_book_front/DetailBook/detail.dart';
 import 'package:match_book_front/Home/Home.dart';
+import 'package:match_book_front/constants.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -37,7 +38,6 @@ class _RegisterBookState extends State<RegisterBook> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        drawer: Drawer(),
         appBar: AppBar(
           title: const Text(
             "Adicione um novo livro",
@@ -135,8 +135,8 @@ class _RegisterBookState extends State<RegisterBook> {
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
               leading: booksList[index].imageLinks != null
-                  ? Image.network(booksList[index].imageLinks['smallThumbnail'])
-                  : Icon(Icons.menu_book_outlined),
+                  ? Image.network(_getImageLinks(booksList[index].imageLinks))
+                  : Image.asset("imagens/not_found_book.webp"),
               title: Text(booksList[index].name),
               //subtitle: Text('Here is a second line'), author
               trailing: IconButton(
@@ -153,9 +153,16 @@ class _RegisterBookState extends State<RegisterBook> {
         ));
   }
 
+  String _getImageLinks(image) {
+    String msg = '';
+    if (image != null) {
+      msg = image['smallThumbnail'];
+    }
+    return msg;
+  }
+
   Future getBooks(String name) async {
-    var ip = '192.168.100.22';
-    var urlRequest = 'http://${ip}:8000/api/book/books-api/${name}';
+    var urlRequest = '${bookURL}books-api/${name}';
     final response = await http.get(
       Uri.parse(urlRequest),
     );

@@ -38,10 +38,10 @@ class _ProfileState extends State<Profile> {
       final te = json.decode(test.body);
       final image = te["profile_image"];
       getBooks();
-
       setState(() {
-        name = te["first_name"] + " " + te["last_name"];
-        imageURL = image['url'];
+        name = te["first_name"];
+        // name = te["first_name"] + " " + te["last_name"];
+        //  imageURL = image['url'];
       });
     });
   }
@@ -84,8 +84,8 @@ class _ProfileState extends State<Profile> {
               ),
               // ignore: prefer_const_constructors
               Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 0.0, vertical: 20.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0),
                 child: Center(
                   child: Text(
                     name,
@@ -136,8 +136,7 @@ class _ProfileState extends State<Profile> {
                           decoration: TextDecoration.none),
                     ),
                   )),
-
-              Flexible(
+              /*Flexible(
                   // ignore: unnecessary_new
                   child: new GridView.count(
                 //childAspectRatio: 3 / 2,
@@ -147,7 +146,7 @@ class _ProfileState extends State<Profile> {
                 children: <Widget>[
                   _createListView(),
                 ],
-              )),
+              )),*/
               IconButton(
                   padding: EdgeInsets.only(top: 10),
                   onPressed: () {
@@ -196,16 +195,24 @@ class _ProfileState extends State<Profile> {
         itemCount: booksList == null ? 0 : booksList.length,
         itemBuilder: (BuildContext context, int index) {
           return Card(
-              child: booksList[index].imageLinks != '1'
-                  ? Image.network(booksList[index].imageLinks)
-                  : Icon(Icons.menu_book_outlined));
+              child: booksList[index].imageLinks != null
+                  ? Image.network(
+                      _getImageLinks(booksList[index].imageLinks),
+                      fit: BoxFit.contain,
+                      height: 300,
+                      width: 300,
+                    )
+                  : Image.asset(
+                      "imagens/not_found_book.webp",
+                      fit: BoxFit.contain,
+                      height: 300,
+                      width: 300,
+                    ));
         });
   }
 
   Future getBooks() async {
-    var ip = '192.168.100.22';
-    var urlRequest =
-        'http://${ip}:8000/api/book/user-books/${'c2d98b61-0d1d-41ab-8295-487685f02695'}';
+    var urlRequest = '${bookURL}user-books/${globals.id}';
     final response = await http.get(
       Uri.parse(urlRequest),
     );
@@ -214,14 +221,20 @@ class _ProfileState extends State<Profile> {
       LinkedHashMap<String, dynamic> list = json.decode(response.body);
       list['results']
           .forEach((element) => {books.add(Book.fromJsonApi(element))});
-      books.forEach((element) {
-        print(element.name);
-      });
       setState(() {
         booksList = books;
       });
+      print(booksList);
     }
   }
+}
+
+String _getImageLinks(image) {
+  String msg = '';
+  if (image != null) {
+    msg = image['smallThumbnail'];
+  }
+  return msg;
 }
 
 Future getUser(String id) async {
